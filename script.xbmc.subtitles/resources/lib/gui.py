@@ -86,10 +86,15 @@ class GUI( xbmcgui.WindowXMLDialog ):
       self.episode = self.episode[-1:]                                      #
 
     self.tvshow    = xbmc.getInfoLabel("VideoPlayer.TVshowtitle")           # Show
-    self.title     = unicodedata.normalize('NFKD', 
+    try :
+        self.title     = unicodedata.normalize('NFKD', 
                       unicode(unicode(xbmc.getInfoLabel
                       ("VideoPlayer.Title"), 'utf-8'))
-                      ).encode('ascii','ignore')                            # Title
+                      ).encode('ascii')                                     # Title
+    except UnicodeEncodeError:
+        originalTitle = xbmc.getInfoLabel("VideoPlayer.OriginalTitle")
+        if not originalTitle == None and not originalTitle == "":
+            self.title     = unicodedata.normalize('NFKD', unicode(originalTitle, 'utf-8')).encode('ascii', 'ignore')
 
     if self.tvshow == "":
       if str(self.year) == "":
